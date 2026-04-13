@@ -1,3 +1,5 @@
+import HeroSection from "@/features/mainPage/HeroSection";
+
 export default function Home() {
-  return <h1>page.tsx</h1>;
+  return <HeroSection />;
 }
