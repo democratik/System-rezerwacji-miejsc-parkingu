@@ -1,6 +1,41 @@
+"use client";
+
+import Link from "next/link";
+import { useAuth } from "@/features/auth/authContext";
+
 export default function HeroSection() {
+  const { user, loading, logout } = useAuth();
+
   return (
-    <section className="bg-blue-600 text-white py-16 px-8 md:py-24">
+    <section className="bg-blue-600 text-white py-16 px-8 md:py-24 relative">
+      <div className="absolute top-4 right-4 md:top-6 md:right-8 flex items-center gap-2">
+        {loading ? null : user ? (
+          <>
+            <span className="text-sm text-blue-100 hidden sm:inline">
+              Witaj, <span className="font-semibold">{user.name}</span>
+            </span>
+            <button
+              onClick={() => logout()}
+              className="text-sm bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer">
+              Wyloguj
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              href="/login"
+              className="text-sm bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2 rounded-lg transition-colors">
+              Zaloguj sie
+            </Link>
+            <Link
+              href="/register"
+              className="text-sm bg-white text-blue-600 hover:bg-blue-50 font-semibold px-4 py-2 rounded-lg transition-colors">
+              Zarejestruj sie
+            </Link>
+          </>
+        )}
+      </div>
+
       <div className="max-w-7xl mx-auto flex flex-col gap-6">
         <h1 className="text-4xl md:text-6xl font-bold leading-tight max-w-3xl">
           Rezerwacja miejsc na parkingu uniwersyteckim
@@ -13,7 +48,7 @@ export default function HeroSection() {
           <a
             href="#map"
             className="inline-block bg-white text-blue-600 font-semibold px-8 py-4 rounded-lg shadow-lg hover:bg-blue-50 transition-colors duration-200">
-            Przejdź do mapy parkingu
+            Przejdz do mapy parkingu
           </a>
         </div>
       </div>
