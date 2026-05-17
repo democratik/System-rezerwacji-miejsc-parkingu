@@ -321,30 +321,73 @@ function MapTab() {
   return (
     <div>
       <p className="text-sm text-gray-500 mb-6">Kliknij na dowolne miejsce, aby zmienic jego status.</p>
-      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm grid grid-cols-2 lg:grid-cols-4 gap-8 mb-6">
-        {SECTIONS.map((sectionName) => (
-          <div key={sectionName}>
-            <h3 className="text-sm font-bold mb-3 text-gray-600">Sekcja {sectionName}</h3>
-            <div className="grid grid-cols-5 gap-1.5">
-              {spots[sectionName]?.map((spot) => (
-                <button key={spot.id} onClick={() => setSelectedSpot(spot)} title={spot.number}
-                  className={[
-                    "aspect-square flex items-center justify-center text-[8px] font-bold rounded border-2 transition-all hover:scale-110 cursor-pointer",
-                    spot.status === "occupied" ? "border-red-400 text-red-500 bg-red-50"
-                      : spot.status === "booked" ? "border-blue-400 text-blue-600 bg-blue-100"
-                      : "border-green-500 text-green-600 bg-green-50",
-                    selectedSpot?.id === spot.id ? "ring-2 ring-offset-1 ring-yellow-400 scale-110" : "",
-                  ].join(" ")}>
-                  {spot.number}
-                </button>
-              ))}
-            </div>
+      <div className="bg-white p-5 md:p-6 rounded-2xl border border-gray-200 shadow-sm mb-6">
+        <div className="flex justify-between items-center mb-3 px-2 text-xs font-bold">
+          <span className="text-blue-600">← Wjazd</span>
+          <span className="text-gray-400 uppercase tracking-widest">Parking uniwersytecki</span>
+          <span className="text-blue-600">Wyjazd →</span>
+        </div>
+
+        <div className="h-3 mb-4 relative overflow-hidden rounded-sm bg-gray-100">
+          <div className="absolute inset-y-0 left-0 right-0 flex items-center">
+            <div className="w-full border-t-2 border-dashed border-blue-300" />
           </div>
-        ))}
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {SECTIONS.map((sectionName) => {
+            const sectionSpots = spots[sectionName] ?? [];
+            const groups = [
+              sectionSpots.slice(0, 10),
+              sectionSpots.slice(10, 20),
+              sectionSpots.slice(20, 25),
+            ];
+            const renderSpot = (spot: Spot) => (
+              <button key={spot.id} onClick={() => setSelectedSpot(spot)} title={spot.number}
+                className={[
+                  "aspect-square flex items-center justify-center text-[8px] font-bold rounded-sm border-2 transition-all hover:scale-110 cursor-pointer",
+                  spot.status === "occupied" ? "border-red-400 text-red-500 bg-red-50"
+                    : spot.status === "booked" ? "border-blue-400 text-blue-600 bg-blue-100"
+                    : "border-green-500 text-green-600 bg-green-50",
+                  selectedSpot?.id === spot.id ? "ring-2 ring-offset-1 ring-blue-500 scale-110" : "",
+                ].join(" ")}>
+                {spot.number}
+              </button>
+            );
+            return (
+              <div key={sectionName} className="bg-gray-50 rounded-lg p-3 pt-5 relative border border-gray-200">
+                <div className="absolute -top-2.5 left-3 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm z-10">
+                  SEKCJA {sectionName}
+                </div>
+
+                {groups.map((group, idx) => (
+                  <React.Fragment key={idx}>
+                    <div className="grid grid-cols-5 gap-1">
+                      {group.map(renderSpot)}
+                    </div>
+                    {idx < groups.length - 1 && (
+                      <div className="h-3 my-2 relative bg-gray-100 rounded-sm overflow-hidden">
+                        <div className="absolute inset-y-0 left-0 right-0 flex items-center">
+                          <div className="w-full border-t border-dashed border-blue-300 opacity-70" />
+                        </div>
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="h-3 mt-4 relative overflow-hidden rounded-sm bg-gray-100">
+          <div className="absolute inset-y-0 left-0 right-0 flex items-center">
+            <div className="w-full border-t-2 border-dashed border-blue-300" />
+          </div>
+        </div>
       </div>
 
       {selectedSpot && (
-        <div className="bg-white border-2 border-yellow-300 rounded-xl p-6 shadow-sm">
+        <div className="bg-white border-2 border-blue-300 rounded-xl p-6 shadow-sm">
           <div className="flex items-start justify-between">
             <div>
               <h4 className="font-bold text-gray-800 text-lg mb-1">Miejsce {selectedSpot.number}</h4>
