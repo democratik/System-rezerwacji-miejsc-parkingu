@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { useRouter } from "next/navigation";
 
 export type AuthUser = {
   id: string;
@@ -36,6 +37,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -96,7 +98,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(async () => {
     await fetch("/api/logout", { method: "POST" });
     setUser(null);
-  }, []);
+    router.push("/login");
+    router.refresh();
+  }, [router]);
 
   const value = useMemo(
     () => ({ user, loading, register, login, logout }),
@@ -106,8 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
+export function useAuth() {  const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
   return ctx;
 }
