@@ -1,8 +1,11 @@
 import { cookies } from "next/headers";
 import { findUserById, type User } from "./users";
+import {
+  SESSION_COOKIE_NAME,
+  SESSION_MAX_AGE_SECONDS,
+} from "./auth-constants";
 
-export const SESSION_COOKIE_NAME = "parking_session";
-const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 dni
+export { SESSION_COOKIE_NAME };
 
 export async function setSessionCookie(userId: string): Promise<void> {
   const cookieStore = await cookies();

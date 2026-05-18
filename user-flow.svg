@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 700" width="2400" height="700" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .process { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; }
+      .process-api { fill: #dbeafe; stroke: #2563eb; stroke-width: 2; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+      .startend-start { fill: #10b981; stroke: #059669; stroke-width: 2; }
+      .startend-end { fill: #ef4444; stroke: #b91c1c; stroke-width: 2; }
+      .session { fill: #d1fae5; stroke: #059669; stroke-width: 2; }
+      .arrow { stroke: #475569; stroke-width: 2; fill: none; }
+      .arrow-dashed { stroke: #475569; stroke-width: 2; fill: none; stroke-dasharray: 6,4; }
+      .label-process { font-size: 13px; font-weight: 600; fill: #1e3a8a; }
+      .label-process-sm { font-size: 12px; font-weight: 500; fill: #1e3a8a; }
+      .label-decision { font-size: 13px; font-weight: 600; fill: #78350f; }
+      .label-session { font-size: 13px; font-weight: 600; fill: #064e3b; }
+      .label-session-sm { font-size: 10px; font-weight: 400; fill: #065f46; }
+      .label-startend { font-size: 14px; font-weight: 700; fill: #ffffff; }
+      .arrow-label { font-size: 11px; font-weight: 700; fill: #475569; }
+      .section-title { font-size: 12px; font-weight: 700; fill: #6b7280; letter-spacing: 2px; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="2400" height="700" fill="#ffffff"/>
+
+  <text x="1200" y="35" font-size="22" font-weight="700" text-anchor="middle" fill="#1e3a8a">User Flow: System rezerwacji parkingu</text>
+  <text x="1200" y="58" font-size="13" font-weight="400" text-anchor="middle" fill="#64748b">Strona uzytkownika (user side)</text>
+
+  <!-- Cluster backgrounds -->
+  <rect x="20" y="100" width="1240" height="430" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="40" y="125" class="section-title">AUTORYZACJA</text>
+
+  <rect x="1280" y="240" width="1100" height="200" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="1300" y="265" class="section-title">REZERWACJA</text>
+
+  <!-- ====== MAIN ROW (cy=320) ====== -->
+
+  <!-- 1. START -->
+  <rect x="25" y="298" width="130" height="44" rx="22" class="startend-start"/>
+  <text x="90" y="326" text-anchor="middle" class="label-startend">START</text>
+
+  <line x1="155" y1="320" x2="173" y2="320" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- 2. Strona glowna z mapa -->
+  <rect x="175" y="290" width="160" height="60" rx="8" class="process"/>
+  <text x="255" y="316" text-anchor="middle" class="label-process-sm">Strona glowna</text>
+  <text x="255" y="333" text-anchor="middle" class="label-process-sm">z mapa</text>
+
+  <line x1="335" y1="320" x2="343" y2="320" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- 3. Decision Zalogowany? -->
+  <polygon points="430,280 515,320 430,360 345,320" class="decision"/>
+  <text x="430" y="325" text-anchor="middle" class="label-decision">Zalogowany?</text>
+
+  <!-- arrow Zalogowany NIE -> Posiada -->
+  <line x1="515" y1="320" x2="523" y2="320" class="arrow" marker-end="url(#arrow)"/>
+  <text x="518" y="313" class="arrow-label">NIE</text>
+
+  <!-- arrow Zalogowany TAK bypass to Sesja (over the top) -->
+  <path d="M 430 280 L 430 145 L 1180 145 L 1180 288" class="arrow-dashed" marker-end="url(#arrow)"/>
+  <text x="445" y="270" class="arrow-label">TAK</text>
+
+  <!-- 4. Decision Posiada konto? -->
+  <polygon points="610,280 695,320 610,360 525,320" class="decision"/>
+  <text x="610" y="319" text-anchor="middle" class="label-decision">Posiada</text>
+  <text x="610" y="333" text-anchor="middle" class="label-decision">konto?</text>
+
+  <!-- arrow Posiada TAK -> /login (top branch) -->
+  <path d="M 610 280 L 610 170 L 748 170" class="arrow" marker-end="url(#arrow)"/>
+  <text x="618" y="225" class="arrow-label">TAK</text>
+
+  <!-- arrow Posiada NIE -> /register (bottom branch) -->
+  <path d="M 610 360 L 610 470 L 748 470" class="arrow" marker-end="url(#arrow)"/>
+  <text x="618" y="420" class="arrow-label">NIE</text>
+
+  <!-- ====== TOP BRANCH (/login, cy=170) ====== -->
+
+  <!-- 5a. Strona /login -->
+  <rect x="750" y="145" width="140" height="50" rx="8" class="process"/>
+  <text x="820" y="166" text-anchor="middle" class="label-process-sm">Strona /login</text>
+  <text x="820" y="183" text-anchor="middle" class="label-process-sm">(email, haslo)</text>
+
+  <line x1="890" y1="170" x2="918" y2="170" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- 6a. POST /api/login -->
+  <rect x="920" y="145" width="160" height="50" rx="8" class="process-api"/>
+  <text x="1000" y="174" text-anchor="middle" class="label-process">POST /api/login</text>
+
+  <!-- arrow POST login -> Sesja (down + right) -->
+  <path d="M 1080 170 L 1180 170 L 1180 288" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- ====== BOTTOM BRANCH (/register, cy=470) ====== -->
+
+  <!-- 5b. Strona /register -->
+  <rect x="750" y="445" width="140" height="50" rx="8" class="process"/>
+  <text x="820" y="466" text-anchor="middle" class="label-process-sm">Strona /register</text>
+  <text x="820" y="483" text-anchor="middle" class="label-process-sm">(email, imie, tel, haslo)</text>
+
+  <line x1="890" y1="470" x2="918" y2="470" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- 6b. POST /api/register -->
+  <rect x="920" y="445" width="160" height="50" rx="8" class="process-api"/>
+  <text x="1000" y="474" text-anchor="middle" class="label-process">POST /api/register</text>
+
+  <!-- arrow POST register -> Sesja (up + right) -->
+  <path d="M 1080 470 L 1180 470 L 1180 352" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- ====== Back to MAIN ROW ====== -->
+
+  <!-- 7. Sesja aktywna -->
+  <rect x="1100" y="290" width="160" height="60" rx="8" class="session"/>
+  <text x="1180" y="313" text-anchor="middle" class="label-session">Sesja aktywna</text>
+  <text x="1180" y="332" text-anchor="middle" class="label-session-sm">cookie parking_session</text>
+
+  <line x1="1260" y1="320" x2="1283" y2="320" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- 8. Mapa parkingu -->
+  <rect x="1285" y="290" width="150" height="60" rx="8" class="process"/>
+  <text x="1360" y="316" text-anchor="middle" class="label-process-sm">Przeglada mape</text>
+  <text x="1360" y="333" text-anchor="middle" class="label-process-sm">parkingu</text>
+
+  <line x1="1435" y1="320" x2="1458" y2="320" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- 9. Klika miejsce -->
+  <rect x="1460" y="285" width="170" height="70" rx="8" class="process"/>
+  <text x="1545" y="312" text-anchor="middle" class="label-process-sm">Klika wolne (zielone)</text>
+  <text x="1545" y="330" text-anchor="middle" class="label-process-sm">miejsce</text>
+
+  <line x1="1630" y1="320" x2="1653" y2="320" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- 10. Modal -->
+  <rect x="1655" y="285" width="180" height="70" rx="8" class="process"/>
+  <text x="1745" y="312" text-anchor="middle" class="label-process-sm">Modal: wpisuje imie,</text>
+  <text x="1745" y="330" text-anchor="middle" class="label-process-sm">wybiera czas</text>
+
+  <line x1="1835" y1="320" x2="1858" y2="320" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- 11. Decision Zarezerwuj? -->
+  <polygon points="1940,280 2020,320 1940,360 1860,320" class="decision"/>
+  <text x="1940" y="325" text-anchor="middle" class="label-decision">Zarezerwuj?</text>
+
+  <!-- arrow Zarezerwuj TAK -> Miejsce -->
+  <line x1="2020" y1="320" x2="2033" y2="320" class="arrow" marker-end="url(#arrow)"/>
+  <text x="2028" y="313" class="arrow-label">TAK</text>
+
+  <!-- arrow Zarezerwuj NIE -> loop back -->
+  <path d="M 1940 360 L 1940 410 L 1360 410 L 1360 352" class="arrow-dashed" marker-end="url(#arrow)"/>
+  <text x="1640" y="403" class="arrow-label">NIE (Anuluj)</text>
+
+  <!-- 12. Miejsce zarezerwowane -->
+  <rect x="2035" y="285" width="170" height="70" rx="8" class="process-api"/>
+  <text x="2120" y="312" text-anchor="middle" class="label-process-sm">Miejsce zarezerwowane</text>
+  <text x="2120" y="330" text-anchor="middle" class="label-process-sm">(staje sie niebieskie)</text>
+
+  <line x1="2205" y1="320" x2="2228" y2="320" class="arrow" marker-end="url(#arrow)"/>
+
+  <!-- 13. KONIEC -->
+  <rect x="2230" y="298" width="130" height="44" rx="22" class="startend-end"/>
+  <text x="2295" y="326" text-anchor="middle" class="label-startend">KONIEC</text>
+
+  <g transform="translate(40, 580)">
+    <rect x="0" y="0" width="1100" height="90" rx="8" fill="#f9fafb" stroke="#e5e7eb" stroke-width="1"/>
+    <text x="15" y="22" font-size="12" font-weight="700" fill="#1f2937">Legenda</text>
+
+    <rect x="15" y="35" width="24" height="16" rx="8" class="startend-start"/>
+    <text x="46" y="47" font-size="11" fill="#374151">Start</text>
+
+    <rect x="15" y="60" width="24" height="16" rx="8" class="startend-end"/>
+    <text x="46" y="72" font-size="11" fill="#374151">Koniec</text>
+
+    <rect x="160" y="35" width="24" height="16" rx="3" class="process"/>
+    <text x="190" y="47" font-size="11" fill="#374151">Akcja / strona</text>
+
+    <rect x="160" y="60" width="24" height="16" rx="3" class="process-api"/>
+    <text x="190" y="72" font-size="11" fill="#374151">Wywolanie API / rezultat</text>
+
+    <polygon points="365,43 389,51 365,59 341,51" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="400" y="55" font-size="11" fill="#374151">Decyzja</text>
+
+    <rect x="510" y="43" width="24" height="16" rx="3" class="session"/>
+    <text x="541" y="55" font-size="11" fill="#374151">Stan sesji</text>
+
+    <line x1="680" y1="43" x2="710" y2="43" class="arrow" marker-end="url(#arrow)"/>
+    <text x="717" y="47" font-size="11" fill="#374151">Przeplyw glowny</text>
+
+    <line x1="680" y1="68" x2="710" y2="68" class="arrow-dashed" marker-end="url(#arrow)"/>
+    <text x="717" y="72" font-size="11" fill="#374151">Skok / petla (anuluj, bypass)</text>
+  </g>
+</svg>
