@@ -4,12 +4,29 @@ import Link from "next/link";
 import { useAuth } from "@/features/auth/authContext";
 
 export default function HeroSection() {
-  const { user, loading, logout } = useAuth();
+  const { user, admin, loading, logout } = useAuth();
 
   return (
     <section className="bg-blue-600 text-white py-16 px-8 md:py-24 relative">
       <div className="absolute top-4 right-4 md:top-6 md:right-8 flex items-center gap-2">
-        {loading ? null : user ? (
+        {loading ? null : admin ? (
+          <>
+            <span className="text-sm text-blue-100 hidden sm:inline">
+              Administrator:{" "}
+              <span className="font-semibold">{admin.login}</span>
+            </span>
+            <Link
+              href="/AdminPanel"
+              className="text-sm bg-white text-blue-600 hover:bg-blue-50 font-semibold px-4 py-2 rounded-lg transition-colors">
+              Panel administratora
+            </Link>
+            <button
+              onClick={() => logout()}
+              className="text-sm bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer">
+              Wyloguj
+            </button>
+          </>
+        ) : user ? (
           <>
             <span className="text-sm text-blue-100 hidden sm:inline">
               Witaj, <span className="font-semibold">{user.name}</span>

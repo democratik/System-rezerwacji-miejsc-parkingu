@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { getSessionUser } from "@/lib/session";
+import { getSessionUser, getAdminSessionUser } from "@/lib/session";
 import { toPublicUser } from "@/lib/users";
+import { toPublicAdmin } from "@/lib/admins";
 
 export async function GET() {
   const user = await getSessionUser();
-  if (!user) {
-    return NextResponse.json({ user: null });
-  }
-  return NextResponse.json({ user: toPublicUser(user) });
+  const admin = await getAdminSessionUser();
+  return NextResponse.json({
+    user: user ? toPublicUser(user) : null,
+    admin: admin ? toPublicAdmin(admin) : null,
+  });
 }

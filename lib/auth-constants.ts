@@ -3,6 +3,7 @@
 // musial importowac modulow z node:fs ani next/headers.
 
 export const SESSION_COOKIE_NAME = "parking_session";
+export const ADMIN_SESSION_COOKIE_NAME = "parking_admin_session";
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 dni
 
 export const PUBLIC_PAGES: ReadonlySet<string> = new Set([

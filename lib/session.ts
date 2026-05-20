@@ -1,11 +1,15 @@
 import { cookies } from "next/headers";
 import { findUserById, type User } from "./users";
+import { findAdminById, type Admin } from "./admins";
 import {
   SESSION_COOKIE_NAME,
+  ADMIN_SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_SECONDS,
 } from "./auth-constants";
 
-export { SESSION_COOKIE_NAME };
+export { SESSION_COOKIE_NAME, ADMIN_SESSION_COOKIE_NAME };
+
+// ─── Sesja zwyklego uzytkownika ────────────────────────────────────────────
 
 export async function setSessionCookie(userId: string): Promise<void> {
   const cookieStore = await cookies();
@@ -29,4 +33,30 @@ export async function getSessionUser(): Promise<User | null> {
   const sessionId = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!sessionId) return null;
   return findUserById(sessionId);
+}
+
+// ─── Sesja administratora ──────────────────────────────────────────────────
+
+export async function setAdminSessionCookie(adminId: string): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set({
+    name: ADMIN_SESSION_COOKIE_NAME,
+    value: adminId,
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: SESSION_MAX_AGE_SECONDS,
+  });
+}
+
+export async function clearAdminSessionCookie(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete(ADMIN_SESSION_COOKIE_NAME);
+}
+
+export async function getAdminSessionUser(): Promise<Admin | null> {
+  const cookieStore = await cookies();
+  const sessionId = cookieStore.get(ADMIN_SESSION_COOKIE_NAME)?.value;
+  if (!sessionId) return null;
+  return findAdminById(sessionId);
 }
