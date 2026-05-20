@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { findUserByEmail, toPublicUser } from "@/lib/users";
-import { setSessionCookie } from "@/lib/session";
+import { findAdminByLogin, toPublicAdmin } from "@/lib/admins";
+import { setSessionCookie, setAdminSessionCookie } from "@/lib/session";
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -17,19 +18,27 @@ export async function POST(req: NextRequest) {
 
   if (!email || !password) {
     return NextResponse.json(
-      { error: "E-mail i haslo sa wymagane" },
+      { error: "E-mail/login i haslo sa wymagane" },
       { status: 400 }
     );
   }
 
+  // Najpierw sprawdzamy zwyklego uzytkownika (logowanie po e-mailu)
   const user = await findUserByEmail(email);
-  if (!user || user.password !== password) {
-    return NextResponse.json(
-      { error: "Nieprawidlowy e-mail lub haslo" },
-      { status: 401 }
-    );
+  if (user && user.password === password) {
+    await setSessionCookie(user.id);
+    return NextResponse.json({ role: "user", user: toPublicUser(user) });
   }
 
-  await setSessionCookie(user.id);
-  return NextResponse.json({ user: toPublicUser(user) });
+  // Potem sprawdzamy administratora (logowanie po loginie)
+  const admin = await findAdminByLogin(email);
+  if (admin && admin.password === password) {
+    await setAdminSessionCookie(admin.id);
+    return NextResponse.json({ role: "admin", admin: toPublicAdmin(admin) });
+  }
+
+  return NextResponse.json(
+    { error: "Nieprawidlowy e-mail/login lub haslo" },
+    { status: 401 }
+  );
 }
