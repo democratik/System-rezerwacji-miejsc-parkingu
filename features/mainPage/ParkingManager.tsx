@@ -2,11 +2,13 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   useParkingContext,
   SECTIONS,
   type Spot,
 } from "@/features/parking/parkingContext";
+import { calculatePrice, formatPrice } from "@/lib/pricing";
 
 type BookingModal = { spotId: string; spotNumber: string };
 
@@ -20,7 +22,8 @@ const DURATION_OPTIONS = [
 ];
 
 export default function ParkingManager() {
-  const { spots, addBooking } = useParkingContext();
+  const { spots } = useParkingContext();
+  const router = useRouter();
   const [modal, setModal] = useState<BookingModal | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<number>(60);
   const [driverName, setDriverName] = useState<string>("");
@@ -43,8 +46,13 @@ export default function ParkingManager() {
 
   const handleConfirm = () => {
     if (!modal) return;
-    addBooking(modal.spotId, driverName, selectedDuration);
-    setModal(null);
+    // Przechodzimy do strony platnosci - rezerwacja powstanie po oplaceniu
+    const params = new URLSearchParams({
+      spot: modal.spotId,
+      name: driverName.trim(),
+      duration: String(selectedDuration),
+    });
+    router.push(`/payment?${params.toString()}`);
   };
 
   const formatTime = (date: Date) =>
@@ -230,13 +238,21 @@ export default function ParkingManager() {
                 ))}
               </div>
             </div>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 text-sm text-blue-700">
-              Rezerwacja do:{" "}
-              <span className="font-bold">
-                {formatTime(
-                  new Date(Date.now() + selectedDuration * 60 * 1000),
-                )}
-              </span>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 text-sm text-blue-700 space-y-1">
+              <div className="flex justify-between">
+                <span>Rezerwacja do:</span>
+                <span className="font-bold">
+                  {formatTime(
+                    new Date(Date.now() + selectedDuration * 60 * 1000),
+                  )}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Do zaplaty:</span>
+                <span className="font-bold">
+                  {formatPrice(calculatePrice(selectedDuration))}
+                </span>
+              </div>
             </div>
             <div className="flex gap-3">
               <button
@@ -247,7 +263,7 @@ export default function ParkingManager() {
               <button
                 onClick={handleConfirm}
                 className="cursor-pointer flex-1 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all shadow-md">
-                Zarezerwuj
+                Przejdz do platnosci
               </button>
             </div>
           </div>
